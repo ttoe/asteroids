@@ -26,3 +26,6 @@ typedef size_t usize;
     CLITERAL(Vector2) { -1, 0 }
 #define VEC_D                                                                                                          \
     CLITERAL(Vector2) { 0, 1 }
+
+#define MIN(A, B) ((A) < (B) ? (A) : (B))
+#define MAX(A, B) ((A) > (B) ? (A) : (B))

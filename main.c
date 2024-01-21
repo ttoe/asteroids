@@ -15,7 +15,7 @@ int main(void)
     i64 shader_loc_seconds = GetShaderLocation(shader, "seconds");
 
     const Texture2D ship = LoadTexture("assets/ship.png");
-    const Rectangle ship_source = {0, 0, 48, 48};
+    const Rectangle ship_source = {0, 0, 32, 32};
 
     Player player = player_init(WIN_CENTER, 0.0, 0.0);
 
@@ -28,20 +28,14 @@ int main(void)
         // Update game state before drawing
         const f32 frametime = GetFrameTime();
 
-        player_velocity_update(&player);
-        player_position_update(&player, frametime);
+        player_update(&player, frametime);
 
         // Draw the current game state
         BeginDrawing();
         ClearBackground(BLACK);
 
-        Rectangle ship_dest = {player.position.x, player.position.y, 48, 48};
-        DrawTexturePro(ship, ship_source, ship_dest, (Vector2){24, 24}, player.rotation * RAD2DEG, WHITE);
-
-        // DEBUG
-        // draw player velocity
-        DrawCircleV(Vector2Add(player.position, Vector2Scale(Vector2Rotate(VEC_R, player.rotation), player.speed)), 5,
-                    WHITE);
+        Rectangle ship_dest = {player.position.x, player.position.y, 32, 32};
+        DrawTexturePro(ship, ship_source, ship_dest, (Vector2){16, 16}, player.rotation * RAD2DEG, WHITE);
 
         if (IsKeyPressed(KEY_SPACE))
         {
@@ -62,7 +56,13 @@ int main(void)
             shader_seconds -= GetFrameTime();
         }
 
+        // TODO: move all debug function into own file and call here
+
+        // draw player velocity
+        DrawCircleV(Vector2Add(player.position, Vector2Scale(Vector2Rotate(VEC_R, player.rotation), player.speed)), 5,
+                    WHITE);
         DrawFPS(0, 0);
+
         EndDrawing();
     }
 
