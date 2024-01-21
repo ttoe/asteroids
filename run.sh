@@ -4,8 +4,9 @@ set -xe
 
 INCLUDE=$(pkg-config --cflags --libs raylib)
 CFLAGS="-Wall -Wextra -Wpedantic -O0"
+CFILES=*.c
 
-clang -std=c99 -o main main.c player.c $INCLUDE $CFLAGS
+clang -std=c99 -o main $CFILES $INCLUDE $CFLAGS
 
 ./main
 
