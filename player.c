@@ -6,7 +6,14 @@
 
 Player player_init(Vector2 position, f32 rotation, f32 speed)
 {
-    return (Player){.position = position, .rotation = rotation, .speed = speed};
+    const Texture2D texture = LoadTexture("assets/ship.png");
+    const Rectangle texture_source = {0, 0, 32, 32};
+
+    return (Player){.position = position,
+                    .rotation = rotation,
+                    .speed = speed,
+                    .texture = texture,
+                    .texture_source = texture_source};
 }
 
 void player_velocity_update(Player *player)
@@ -72,4 +79,17 @@ void player_update(Player *player, f32 frametime)
 {
     player_velocity_update(player);
     player_position_update(player, frametime);
+}
+
+void player_draw(Player *player)
+{
+    Rectangle texture_dest = {player->position.x, player->position.y, 32, 32};
+    Vector2 origin = {16, 16};
+    DrawTexturePro(player->texture, player->texture_source, texture_dest, origin, player->rotation * RAD2DEG, WHITE);
+}
+
+void player_deinit(Player *player)
+{
+    // called when the game ends to free textures
+    UnloadTexture(player->texture);
 }

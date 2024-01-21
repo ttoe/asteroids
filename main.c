@@ -10,18 +10,15 @@ int main(void)
     InitWindow(WIN_WIDTH, WIN_HEIGHT, "Asteroids");
     SetTargetFPS(TARGET_FPS);
 
+    Texture2D default_texture = texture_default_init();
     Shader shader = LoadShader(0, "shaders/damage_vignette.fs");
-
     i64 shader_loc_seconds = GetShaderLocation(shader, "seconds");
+    f32 shader_seconds = 1.2;
 
-    const Texture2D ship = LoadTexture("assets/ship.png");
-    const Rectangle ship_source = {0, 0, 32, 32};
+    const Texture2D asteroid = LoadTexture("assets/asteroid_explode.png");
+    const Rectangle asteroid_source = {0, 0, 96, 96};
 
     Player player = player_init(WIN_CENTER, 0.0, 0.0);
-
-    Texture2D default_texture = texture_default_init();
-
-    f32 shader_seconds = 1.2;
 
     while (!WindowShouldClose())
     {
@@ -34,8 +31,7 @@ int main(void)
         BeginDrawing();
         ClearBackground(BLACK);
 
-        Rectangle ship_dest = {player.position.x, player.position.y, 32, 32};
-        DrawTexturePro(ship, ship_source, ship_dest, (Vector2){16, 16}, player.rotation * RAD2DEG, WHITE);
+        player_draw(&player);
 
         if (IsKeyPressed(KEY_SPACE))
         {
@@ -68,7 +64,7 @@ int main(void)
 
     UnloadShader(shader);
     UnloadTexture(default_texture);
-    UnloadTexture(ship);
+    player_deinit(&player);
     CloseWindow();
 
     return 0;
