@@ -1,7 +1,12 @@
 #include "player.h"
+#include "constants.h"
 #include "raylib.h"
 #include "raymath.h"
-#include "constants.h"
+
+Player player_init(Vector2 position, f32 rotation, f32 speed)
+{
+    return (Player){.position = position, .rotation = rotation, .speed = speed};
+}
 
 void player_velocity_update(Player *player)
 {
