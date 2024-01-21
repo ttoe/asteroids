@@ -5,11 +5,11 @@
 #include "raymath.h"
 #include "rlgl.h"
 
+f32 win_width = 700;
+f32 win_height = 700;
+
 int main(void)
 {
-    f32 win_width = 600;
-    f32 win_height = 600;
-
     InitWindow(win_width, win_height, "Asteroids");
     // SetWindowState(FLAG_WINDOW_RESIZABLE);
     SetTargetFPS(TARGET_FPS);
@@ -18,15 +18,7 @@ int main(void)
 
     i64 shader_loc_seconds = GetShaderLocation(shader, "seconds");
 
-    /*
-    i64 shader_loc_win_width = GetShaderLocation(shader, "win_width");
-    i64 shader_loc_win_height = GetShaderLocation(shader, "win_height");
-
-    SetShaderValue(shader, shader_loc_win_width, &win_width, SHADER_UNIFORM_FLOAT);
-    SetShaderValue(shader, shader_loc_win_height, &win_height, SHADER_UNIFORM_FLOAT);
-    */
-
-    const Texture2D ship = LoadTexture("ship.png");
+    const Texture2D ship = LoadTexture("assets/ship.png");
     const Rectangle ship_source = {0, 0, 48, 48};
 
     Player p = {.position = ORIGIN, .rotation = 0, .speed = 0};
@@ -39,16 +31,6 @@ int main(void)
 
     while (!WindowShouldClose())
     {
-        /*
-        if (IsWindowResized())
-        {
-            win_width = GetScreenWidth();
-            win_height = GetScreenHeight();
-            SetShaderValue(shader, shader_loc_win_width, &win_width, SHADER_UNIFORM_FLOAT);
-            SetShaderValue(shader, shader_loc_win_height, &win_height, SHADER_UNIFORM_FLOAT);
-        }
-        */
-
         // Update game state before drawing
         const f32 frametime = GetFrameTime();
 
@@ -63,8 +45,6 @@ int main(void)
         DrawTexturePro(ship, ship_source, ship_dest, (Vector2){24, 24}, p.rotation * RAD2DEG, WHITE);
 
         // DEBUG
-        const Vector2 origin = {win_width / 2.0f, win_height / 2.0f};
-
         // draw player velocity
         DrawCircleV(Vector2Add(p.position, Vector2Scale(Vector2Rotate(VEC_R, p.rotation), p.speed)), 5, WHITE);
 
@@ -92,6 +72,7 @@ int main(void)
     }
 
     UnloadShader(shader);
+    UnloadTexture(default_texture);
     UnloadTexture(ship);
     CloseWindow();
 
