@@ -3,6 +3,11 @@
 #include "defines.h"
 #include "raylib.h"
 
+#define PLAYER_SPEED_MAX 300
+#define PLAYER_SPEED_INCREASE 3
+
+#define PLAYER_ROTATION_SPEED 0.05f
+
 #define PLAYER_WRAP_PADDING 16
 #define PLAYER_WRAP_NUDGE_SPEED 30
 

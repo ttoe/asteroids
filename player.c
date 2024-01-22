@@ -6,6 +6,7 @@
 
 Player player_init(Vector2 position, f32 rotation, f32 speed)
 {
+    // TODO: asset loading system
     const Texture2D texture = LoadTexture("assets/ship.png");
     const Rectangle texture_source = {0, 0, 32, 32};
 
@@ -20,19 +21,20 @@ void player_velocity_update(Player *player)
 {
     if (IsKeyDown(KEY_LEFT))
     {
-        player->rotation -= 0.05f;
+        player->rotation -= PLAYER_ROTATION_SPEED;
     }
     if (IsKeyDown(KEY_RIGHT))
     {
-        player->rotation += 0.05f;
+        player->rotation += PLAYER_ROTATION_SPEED;
     }
+
     if (IsKeyDown(KEY_DOWN))
     {
-        player->speed -= 3;
+        player->speed = MIN(player->speed - PLAYER_SPEED_INCREASE, PLAYER_SPEED_MAX);
     }
     if (IsKeyDown(KEY_UP))
     {
-        player->speed += 3;
+        player->speed = MIN(player->speed + PLAYER_SPEED_INCREASE, PLAYER_SPEED_MAX);
     }
 }
 
@@ -41,10 +43,10 @@ void player_position_wrap(Player *player)
     if (player->position.x < 0 - PLAYER_WRAP_PADDING)
     {
         // teleport to right window edge
-        player->position.x = WIN_WIDTH;
+        player->position.x = WIN_SIDE;
         // nudge player speed
         player->speed = MAX(player->speed, PLAYER_WRAP_NUDGE_SPEED);
-    } else if (player->position.x > WIN_WIDTH + PLAYER_WRAP_PADDING)
+    } else if (player->position.x > WIN_SIDE + PLAYER_WRAP_PADDING)
     {
         // teleport to left window edge
         player->position.x = 0;
@@ -55,10 +57,10 @@ void player_position_wrap(Player *player)
     if (player->position.y < 0 - PLAYER_WRAP_PADDING)
     {
         // teleport to bottom window edge
-        player->position.y = WIN_WIDTH;
+        player->position.y = WIN_SIDE;
         // nudge player speed
         player->speed = MAX(player->speed, PLAYER_WRAP_NUDGE_SPEED);
-    } else if (player->position.y > WIN_HEIGHT + PLAYER_WRAP_PADDING)
+    } else if (player->position.y > WIN_SIDE + PLAYER_WRAP_PADDING)
     {
         // teleport to top window edge
         player->position.y = 0;
