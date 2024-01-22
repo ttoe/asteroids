@@ -4,17 +4,14 @@
 #include "raylib.h"
 #include "raymath.h"
 
-Player player_init(Vector2 position, f32 rotation, f32 speed)
+Player player_init(Vector2 position)
 {
     // TODO: asset loading system
     const Texture2D texture = LoadTexture("assets/ship.png");
     const Rectangle texture_source = {0, 0, 32, 32};
 
-    return (Player){.position = position,
-                    .rotation = rotation,
-                    .speed = speed,
-                    .texture = texture,
-                    .texture_source = texture_source};
+    return (Player){
+        .position = position, .velocity = VEC_R, .rotation = 0, .texture = texture, .texture_source = texture_source};
 }
 
 void player_velocity_update(Player *player)
@@ -28,52 +25,45 @@ void player_velocity_update(Player *player)
         player->rotation += PLAYER_ROTATION_SPEED;
     }
 
+    Vector2 facing_direction = Vector2Rotate(VEC_R, player->rotation);
+
     if (IsKeyDown(KEY_DOWN))
     {
-        player->speed = MIN(player->speed - PLAYER_SPEED_INCREASE, PLAYER_SPEED_MAX);
+        player->velocity = Vector2Subtract(player->velocity, Vector2Scale(facing_direction, PLAYER_DECELLERATION));
     }
     if (IsKeyDown(KEY_UP))
     {
-        player->speed = MIN(player->speed + PLAYER_SPEED_INCREASE, PLAYER_SPEED_MAX);
+        player->velocity = Vector2Add(player->velocity, Vector2Scale(facing_direction, PLAYER_ACCELLERATION));
     }
 }
 
 void player_position_wrap(Player *player)
 {
+    // TODO nudge player velocity
     if (player->position.x < 0 - PLAYER_WRAP_PADDING)
     {
         // teleport to right window edge
         player->position.x = WIN_SIDE;
-        // nudge player speed
-        player->speed = MAX(player->speed, PLAYER_WRAP_NUDGE_SPEED);
     } else if (player->position.x > WIN_SIDE + PLAYER_WRAP_PADDING)
     {
         // teleport to left window edge
         player->position.x = 0;
-        // nudge player speed
-        player->speed = MAX(player->speed, PLAYER_WRAP_NUDGE_SPEED);
     }
 
     if (player->position.y < 0 - PLAYER_WRAP_PADDING)
     {
         // teleport to bottom window edge
         player->position.y = WIN_SIDE;
-        // nudge player speed
-        player->speed = MAX(player->speed, PLAYER_WRAP_NUDGE_SPEED);
     } else if (player->position.y > WIN_SIDE + PLAYER_WRAP_PADDING)
     {
         // teleport to top window edge
         player->position.y = 0;
-        // nudge player speed
-        player->speed = MAX(player->speed, PLAYER_WRAP_NUDGE_SPEED);
     }
 }
 
 void player_position_update(Player *player, f32 frametime)
 {
-    const Vector2 vector_to_add = Vector2Scale(Vector2Rotate(VEC_R, player->rotation), player->speed * frametime);
-    player->position = Vector2Add(player->position, vector_to_add);
-
+    player->position = Vector2Add(player->position, Vector2Scale(player->velocity, frametime));
     player_position_wrap(player);
 }
 

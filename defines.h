@@ -18,14 +18,16 @@ typedef double f64;
 
 typedef size_t usize;
 
+#define VEC_00                                                                                                         \
+    CLITERAL(Vector2) { 0., 0. }
 #define VEC_R                                                                                                          \
-    CLITERAL(Vector2) { 1, 0 }
+    CLITERAL(Vector2) { 1., 0. }
 #define VEC_U                                                                                                          \
-    CLITERAL(Vector2) { 0, -1 }
+    CLITERAL(Vector2) { 0., -1. }
 #define VEC_L                                                                                                          \
-    CLITERAL(Vector2) { -1, 0 }
+    CLITERAL(Vector2) { -1., 0. }
 #define VEC_D                                                                                                          \
-    CLITERAL(Vector2) { 0, 1 }
+    CLITERAL(Vector2) { 0., 1. }
 
 #define MIN(A, B) ((A) < (B) ? (A) : (B))
 #define MAX(A, B) ((A) > (B) ? (A) : (B))

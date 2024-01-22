@@ -22,7 +22,7 @@ int main(void)
 
     f32 shader_seconds = 1.2;
 
-    Player player = player_init(WIN_CENTER, 0.0, 0.0);
+    Player player = player_init(WIN_CENTER);
 
     SetRandomSeed(time(0));
 
@@ -61,10 +61,7 @@ int main(void)
         }
 
         // TODO: move all debug function into own file and call here
-
-        // draw player velocity
-        DrawCircleV(Vector2Add(player.position, Vector2Scale(Vector2Rotate(VEC_R, player.rotation), player.speed)), 5,
-                    WHITE);
+        DrawLineV(player.position, Vector2Add(player.velocity, player.position), RED);
         DrawFPS(0, 0);
         DrawText(TextFormat("active asteroids %d", active_asteroids), 0, 20, 20, RED);
 
