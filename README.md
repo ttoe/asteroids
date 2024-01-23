@@ -16,7 +16,7 @@ The run-script uses `pkg-config`. If that is not available, the compiler flags c
 
 # Building / Running
 
-Run the bash script `run.sh`. If needed adjust 
+Run the bash script `run.sh`. Adjust if needed.
 
 # Assets
 

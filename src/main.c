@@ -3,6 +3,7 @@
 #include "constants.h"
 #include "defines.h"
 #include "player.h"
+#include "projectiles.h"
 #include "raylib.h"
 #include "raymath.h"
 #include "texture_default.h"
@@ -33,6 +34,7 @@ int main(void)
         player_update(&player, frametime);
         asteroids_create(&asteroid_animation, frametime);
         i64 active_asteroids = asteroids_update(frametime);
+        i64 active_projectiles = projectiles_update(frametime);
 
         // Draw the current game state
         BeginDrawing();
@@ -40,6 +42,7 @@ int main(void)
 
         player_draw(&player);
         asteroids_draw();
+        projectiles_draw();
 
         if (IsKeyPressed(KEY_SPACE))
         {
@@ -64,6 +67,7 @@ int main(void)
         DrawLineV(player.position, Vector2Add(player.velocity, player.position), RED);
         DrawFPS(0, 0);
         DrawText(TextFormat("active asteroids %d", active_asteroids), 0, 20, 20, RED);
+        DrawText(TextFormat("active projectiles %d", active_projectiles), 0, 40, 20, RED);
 
         EndDrawing();
     }

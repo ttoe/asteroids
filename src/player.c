@@ -1,6 +1,8 @@
 #include "player.h"
+#include "animation.h"
 #include "constants.h"
 #include "defines.h"
+#include "projectiles.h"
 #include "raylib.h"
 #include "raymath.h"
 
@@ -67,10 +69,20 @@ void player_position_update(Player *player, f32 frametime)
     player_position_wrap(player);
 }
 
+void player_projectile_shoot(Player *player, f32 frametime)
+{
+    Animation2D a = {0};
+    if (IsKeyDown(KEY_LEFT_SHIFT))
+    {
+        projectiles_create(&a, player, frametime);
+    }
+}
+
 void player_update(Player *player, f32 frametime)
 {
     player_velocity_update(player);
     player_position_update(player, frametime);
+    player_projectile_shoot(player, frametime);
 }
 
 void player_draw(Player *player)
