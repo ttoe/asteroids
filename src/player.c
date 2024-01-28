@@ -1,5 +1,6 @@
 #include "player.h"
 #include "animation.h"
+#include "asteroids.h"
 #include "constants.h"
 #include "defines.h"
 #include "projectiles.h"
@@ -85,11 +86,38 @@ void player_update(Player *player, f32 frametime)
     player_projectile_shoot(player, frametime);
 }
 
-void player_draw(Player *player)
+void player_draw(Player *player, Asteroid *asteroids, Shader shader, i64 shader_loc_seconds, f32 *shader_seconds,
+                 Texture2D default_texture)
 {
     Rectangle texture_dest = {player->position.x, player->position.y, 32, 32};
     Vector2 origin = {16, 16};
     DrawTexturePro(player->texture, player->texture_source, texture_dest, origin, player->rotation * RAD2DEG, WHITE);
+
+    // TODO: this does not actually work...
+    // a timer has to be defined that is checked before changing the shader_seconds.
+    // also this whole setup is not well decoupled
+    for (usize i = 0; i < ASTEROIDS_MAX; i++)
+    {
+        if (CheckCollisionPointCircle(asteroids[i].position, player->position, 30))
+        {
+            if (*shader_seconds > 0)
+            {
+                Rectangle source = {.x = 0, .y = 0, .width = 1, .height = 1};
+                Rectangle dest = {.x = 0, .y = 0, .width = WIN_SIDE, .height = WIN_SIDE};
+
+                SetShaderValue(shader, shader_loc_seconds, shader_seconds, SHADER_UNIFORM_FLOAT);
+
+                BeginShaderMode(shader);
+                DrawTexturePro(default_texture, source, dest, (Vector2){0, 0}, 0, WHITE);
+                EndShaderMode();
+
+                *shader_seconds -= GetFrameTime();
+            } else
+            {
+                *shader_seconds = SHADER_SECONDS;
+            }
+        }
+    }
 }
 
 void player_deinit(Player *player)

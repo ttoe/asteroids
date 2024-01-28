@@ -20,8 +20,7 @@ int main(void)
     Texture2D default_texture = texture_default_init();
     Shader shader = LoadShader(0, "shaders/damage_vignette.fs");
     i64 shader_loc_seconds = GetShaderLocation(shader, "seconds");
-
-    f32 shader_seconds = 1.2;
+    f32 shader_seconds = SHADER_SECONDS;
 
     Player player = player_init(WIN_CENTER);
 
@@ -32,42 +31,17 @@ int main(void)
         const f32 frametime = GetFrameTime();
 
         player_update(&player, frametime);
-        asteroids_create(&asteroid_animation, frametime);
-        i64 active_asteroids = asteroids_update(frametime);
-        i64 active_projectiles = projectiles_update(frametime);
+        asteroids_update(&asteroid_animation, frametime);
+        projectiles_update(frametime);
+        projectiles_collide(asteroids_get());
 
         // Draw the current game state
         BeginDrawing();
         ClearBackground(BLACK);
 
-        player_draw(&player);
+        player_draw(&player, asteroids_get(), shader, shader_loc_seconds, &shader_seconds, default_texture);
         asteroids_draw();
         projectiles_draw();
-
-        if (IsKeyPressed(KEY_SPACE))
-        {
-            shader_seconds = 1.2;
-        }
-
-        if (shader_seconds > 0)
-        {
-            Rectangle source = {.x = 0, .y = 0, .width = 1, .height = 1};
-            Rectangle dest = {.x = 0, .y = 0, .width = WIN_SIDE, .height = WIN_SIDE};
-
-            SetShaderValue(shader, shader_loc_seconds, &shader_seconds, SHADER_UNIFORM_FLOAT);
-
-            BeginShaderMode(shader);
-            DrawTexturePro(default_texture, source, dest, (Vector2){0, 0}, 0, WHITE);
-            EndShaderMode();
-
-            shader_seconds -= GetFrameTime();
-        }
-
-        // TODO: move all debug function into own file and call here
-        DrawLineV(player.position, Vector2Add(player.velocity, player.position), RED);
-        DrawFPS(0, 0);
-        DrawText(TextFormat("active asteroids %d", active_asteroids), 0, 20, 20, RED);
-        DrawText(TextFormat("active projectiles %d", active_projectiles), 0, 40, 20, RED);
 
         EndDrawing();
     }

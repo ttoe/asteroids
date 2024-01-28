@@ -12,20 +12,17 @@ Animation2D animation2d_create(Texture2D texture, f32 frame_width, f32 frame_hei
     };
 }
 
-void animation2d_draw_frame_pro(Animation2D *animation, u64 framenumber, Rectangle dest, Vector2 origin, f32 rotation,
-                                Color tint)
-{
-    assert(framenumber <= animation->number_of_frames);
-    DrawTexturePro(animation->texture, animation->frame_source, dest, origin, rotation, tint);
-}
-
 void animation2d_draw_frame(Animation2D *animation, u64 framenumber, f32 rotation, Vector2 dest)
 {
-    assert(framenumber <= animation->number_of_frames);
+    // TODO: make pro version
+
+    const i64 fs_width = animation->frame_source.width;
+    const i64 fs_height = animation->frame_source.height;
 
     // center by default and source equals destination
-    Vector2 origin = {animation->frame_source.width / 2.0, animation->frame_source.height / 2.0};
-    Rectangle dest_rect = {.x = dest.x, .y = dest.y, animation->frame_source.width, animation->frame_source.height};
+    Vector2 origin = {fs_width / 2.0, fs_height / 2.0};
+    Rectangle src_rect = {.x = fs_width * framenumber, .y = 0, .width = fs_width, .height = fs_height};
+    Rectangle dest_rect = {.x = dest.x, .y = dest.y, fs_width, fs_height};
 
-    DrawTexturePro(animation->texture, animation->frame_source, dest_rect, origin, rotation, WHITE);
+    DrawTexturePro(animation->texture, src_rect, dest_rect, origin, rotation, WHITE);
 }

@@ -18,7 +18,7 @@ void asteroids_create(Animation2D *animation, f32 frametime)
 
     for (usize i = 0; i < ASTEROIDS_MAX; i++)
     {
-        if (!_asteroids[i].is_active)
+        if (!_asteroids[i].is_active && !_asteroids[i].is_exploding)
         {
             _asteroids[i] = asteroid_init(animation);
             _last_asteroid_spawn_time = 0;
@@ -27,8 +27,10 @@ void asteroids_create(Animation2D *animation, f32 frametime)
     }
 }
 
-i64 asteroids_update(f32 frametime)
+i64 asteroids_update(Animation2D *animation, f32 frametime)
 {
+    asteroids_create(animation, frametime);
+
     i64 active_asteroids = 0;
     for (usize i = 0; i < ASTEROIDS_MAX; i++)
     {
@@ -45,3 +47,5 @@ void asteroids_draw()
         asteroid_draw(_asteroids[i]);
     }
 }
+
+Asteroid *asteroids_get() { return _asteroids; }

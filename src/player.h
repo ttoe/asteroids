@@ -1,5 +1,6 @@
 #pragma once
 
+#include "asteroid.h"
 #include "defines.h"
 #include "raylib.h"
 
@@ -24,5 +25,6 @@ typedef struct
 
 Player player_init(Vector2 position);
 void player_update(Player *player, f32 frametime);
-void player_draw(Player *player);
+void player_draw(Player *player, Asteroid *asteroids, Shader shader, i64 shader_loc_seconds, f32 *shader_seconds,
+                 Texture2D default_texture);
 void player_deinit(Player *player);

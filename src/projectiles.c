@@ -1,5 +1,7 @@
 #include "projectiles.h"
 #include "animation.h"
+#include "asteroid.h"
+#include "asteroids.h"
 #include "projectile.h"
 #include "raylib.h"
 
@@ -41,5 +43,16 @@ void projectiles_draw()
     for (usize i = 0; i < PROJECTILES_MAX; i++)
     {
         projectile_draw(_projectiles[i]);
+    }
+}
+
+void projectiles_collide(Asteroid *asteroids)
+{
+    for (usize i = 0; i < ASTEROIDS_MAX; i++)
+    {
+        for (usize j = 0; j < PROJECTILES_MAX; j++)
+        {
+            projectile_collide(&_projectiles[j], &asteroids[i]);
+        }
     }
 }

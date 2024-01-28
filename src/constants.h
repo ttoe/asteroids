@@ -5,3 +5,5 @@
 
 #define WIN_CENTER                                                                                                     \
     CLITERAL(Vector2) { WIN_SIDE / 2.0f, WIN_SIDE / 2.0f }
+
+#define SHADER_SECONDS 1.2f
